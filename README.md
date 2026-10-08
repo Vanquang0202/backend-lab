@@ -44,3 +44,5 @@ Nếu host port đã bị chiếm, override khi chạy (backend vẫn dùng port
 6. [Fault scenarios](labs/debugging/README.md)
 
 Mỗi bài để `Solution` ở cuối file. Hãy dừng trước phần đó và tự thử trước.
+
+test git 
