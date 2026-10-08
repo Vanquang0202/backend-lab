@@ -45,3 +45,4 @@ git log --oneline --graph --decorate --all
 
 Tạo conflict nhanh: sửa cùng một dòng trên hai branch rồi merge. `reset --soft` giữ thay đổi trong staging; `revert` tạo commit đảo ngược và phù hợp commit đã chia sẻ.
 
+Git conflict demo
