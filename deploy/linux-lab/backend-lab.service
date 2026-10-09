@@ -1,0 +1,20 @@
+[Unit]
+Description=backend-lab Spring Boot service
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=backend-lab
+Group=backend-lab
+WorkingDirectory=/opt/backend-lab
+EnvironmentFile=-/etc/backend-lab/backend-lab.env
+ExecStart=/usr/bin/java -Xms256m -Xmx512m -jar /opt/backend-lab/app.jar --spring.profiles.active=linux-lab
+Restart=on-failure
+RestartSec=5
+SuccessExitStatus=143
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target
