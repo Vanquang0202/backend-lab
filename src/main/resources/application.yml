@@ -27,6 +27,15 @@ spring:
     listener:
       ack-mode: record
       concurrency: ${KAFKA_CONCURRENCY:1}
+  rabbitmq:
+    host: ${RABBITMQ_HOST:localhost}
+    port: ${RABBITMQ_PORT:5672}
+    username: ${RABBITMQ_USERNAME:labuser}
+    password: ${RABBITMQ_PASSWORD:labpass}
+    listener:
+      simple:
+        acknowledge-mode: auto
+        default-requeue-rejected: false
   cache.type: redis
 server.port: ${SERVER_PORT:8080}
 management.endpoints.web.exposure.include: health,info,metrics
@@ -35,4 +44,12 @@ app:
   kafka.topic: ${ORDER_TOPIC:order-created}
   notification.fail: ${LAB_NOTIFICATION_FAIL:false}
   notification.retry-backoff-ms: ${LAB_RETRY_BACKOFF_MS:1000}
+  rabbit:
+    exchange: ${RABBITMQ_EXCHANGE:lab.jobs.exchange}
+    queue: ${RABBITMQ_QUEUE:lab.jobs.queue}
+    routing-key: ${RABBITMQ_ROUTING_KEY:lab.jobs}
+    dlx: ${RABBITMQ_DLX:lab.jobs.dlx}
+    dlq: ${RABBITMQ_DLQ:lab.jobs.dlq}
+    processing-delay-ms: ${RABBITMQ_PROCESSING_DELAY_MS:2000}
+    retry-backoff-ms: ${RABBITMQ_RETRY_BACKOFF_MS:1000}
 logging.level.com.example.orderlab: INFO

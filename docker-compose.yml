@@ -30,6 +30,19 @@ services:
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "false"
       CLUSTER_ID: MkU3OEVBNTcwNTJENDM2Qk
     healthcheck: {test: ["CMD-SHELL", "/opt/kafka/bin/kafka-broker-api-versions.sh --bootstrap-server localhost:9092 >/dev/null 2>&1"], interval: 10s, timeout: 10s, retries: 10}
+  rabbitmq:
+    image: rabbitmq:3.13-management
+    ports:
+      - "${RABBITMQ_HOST_PORT:-5673}:5672"
+      - "${RABBITMQ_MANAGEMENT_HOST_PORT:-15673}:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME:-labuser}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-labpass}
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "-q", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
   backend:
     build: .
     ports: ["${BACKEND_HOST_PORT:-8080}:8080"]
@@ -38,11 +51,16 @@ services:
       REDIS_HOST: redis
       KAFKA_BOOTSTRAP_SERVERS: kafka:29092
       KAFKA_GROUP_ID: order-notification-group
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
+      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME:-labuser}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-labpass}
       LAB_NOTIFICATION_FAIL: ${LAB_NOTIFICATION_FAIL:-false}
       LAB_RETRY_BACKOFF_MS: ${LAB_RETRY_BACKOFF_MS:-1000}
     depends_on:
       db: {condition: service_healthy}
       redis: {condition: service_healthy}
       kafka: {condition: service_healthy}
+      rabbitmq: {condition: service_healthy}
 volumes:
   postgres_data:
