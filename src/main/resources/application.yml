@@ -44,6 +44,11 @@ app:
   kafka.topic: ${ORDER_TOPIC:order-created}
   kafka.idempotency-topic: ${IDEMPOTENCY_TOPIC:idempotency-lab}
   kafka.idempotency-group: ${IDEMPOTENCY_GROUP_ID:idempotency-lab-group}
+  resilience:
+    payment-url: ${PAYMENT_SERVICE_URL:http://localhost:8080/fake-payment}
+    payment-timeout:
+      connect-ms: ${PAYMENT_CONNECT_TIMEOUT_MS:2000}
+      read-ms: ${PAYMENT_READ_TIMEOUT_MS:3000}
   outbox:
     simulate-kafka-failure: ${OUTBOX_SIMULATE_KAFKA_FAILURE:false}
     max-retry: ${OUTBOX_MAX_RETRY:5}
@@ -59,4 +64,23 @@ app:
     dlq: ${RABBITMQ_DLQ:lab.jobs.dlq}
     processing-delay-ms: ${RABBITMQ_PROCESSING_DELAY_MS:2000}
     retry-backoff-ms: ${RABBITMQ_RETRY_BACKOFF_MS:1000}
+resilience4j:
+  retry:
+    instances:
+      paymentRetry:
+        max-attempts: ${PAYMENT_RETRY_MAX_ATTEMPTS:3}
+        wait-duration: ${PAYMENT_RETRY_WAIT:1s}
+        retry-exceptions:
+          - com.example.orderlab.resilience.PaymentTimeoutException
+          - org.springframework.web.client.HttpServerErrorException
+  circuitbreaker:
+    instances:
+      paymentCircuitBreaker:
+        sliding-window-type: COUNT_BASED
+        sliding-window-size: ${PAYMENT_CB_WINDOW_SIZE:4}
+        minimum-number-of-calls: ${PAYMENT_CB_MIN_CALLS:4}
+        failure-rate-threshold: ${PAYMENT_CB_FAILURE_THRESHOLD:50}
+        wait-duration-in-open-state: ${PAYMENT_CB_OPEN_WAIT:10s}
+        permitted-number-of-calls-in-half-open-state: ${PAYMENT_CB_HALF_OPEN_CALLS:2}
+        automatic-transition-from-open-to-half-open-enabled: true
 logging.level.com.example.orderlab: INFO
