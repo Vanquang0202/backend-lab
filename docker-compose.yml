@@ -57,6 +57,8 @@ services:
       RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD:-labpass}
       LAB_NOTIFICATION_FAIL: ${LAB_NOTIFICATION_FAIL:-false}
       LAB_RETRY_BACKOFF_MS: ${LAB_RETRY_BACKOFF_MS:-1000}
+      OUTBOX_SIMULATE_KAFKA_FAILURE: ${OUTBOX_SIMULATE_KAFKA_FAILURE:-false}
+      OUTBOX_MAX_RETRY: ${OUTBOX_MAX_RETRY:-5}
     depends_on:
       db: {condition: service_healthy}
       redis: {condition: service_healthy}

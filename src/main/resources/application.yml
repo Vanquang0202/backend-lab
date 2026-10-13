@@ -42,6 +42,11 @@ management.endpoints.web.exposure.include: health,info,metrics
 management.endpoint.health.show-details: always
 app:
   kafka.topic: ${ORDER_TOPIC:order-created}
+  outbox:
+    simulate-kafka-failure: ${OUTBOX_SIMULATE_KAFKA_FAILURE:false}
+    max-retry: ${OUTBOX_MAX_RETRY:5}
+    publisher-delay-ms: ${OUTBOX_PUBLISHER_DELAY_MS:2000}
+    send-timeout-seconds: ${OUTBOX_SEND_TIMEOUT_SECONDS:10}
   notification.fail: ${LAB_NOTIFICATION_FAIL:false}
   notification.retry-backoff-ms: ${LAB_RETRY_BACKOFF_MS:1000}
   rabbit:
