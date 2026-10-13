@@ -44,6 +44,17 @@ app:
   kafka.topic: ${ORDER_TOPIC:order-created}
   kafka.idempotency-topic: ${IDEMPOTENCY_TOPIC:idempotency-lab}
   kafka.idempotency-group: ${IDEMPOTENCY_GROUP_ID:idempotency-lab-group}
+  security:
+    jwt-secret: ${JWT_SECRET:DEV_ONLY_change_this_secret_to_a_long_random_value_32_chars}
+    access-token-ttl: ${SECURITY_ACCESS_TOKEN_TTL:15m}
+    refresh-token-ttl: ${SECURITY_REFRESH_TOKEN_TTL:7d}
+    seed-admin-username: ${SECURITY_SEED_ADMIN_USERNAME:}
+    seed-admin-password: ${SECURITY_SEED_ADMIN_PASSWORD:}
+    cors:
+      allowed-origin: ${SECURITY_CORS_ALLOWED_ORIGIN:http://localhost:3000}
+    oauth2:
+      google:
+        enabled: ${GOOGLE_OAUTH_ENABLED:false}
   resilience:
     payment-url: ${PAYMENT_SERVICE_URL:http://localhost:8080/fake-payment}
     payment-timeout:
