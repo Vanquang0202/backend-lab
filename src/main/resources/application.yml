@@ -42,6 +42,8 @@ management.endpoints.web.exposure.include: health,info,metrics
 management.endpoint.health.show-details: always
 app:
   kafka.topic: ${ORDER_TOPIC:order-created}
+  kafka.idempotency-topic: ${IDEMPOTENCY_TOPIC:idempotency-lab}
+  kafka.idempotency-group: ${IDEMPOTENCY_GROUP_ID:idempotency-lab-group}
   outbox:
     simulate-kafka-failure: ${OUTBOX_SIMULATE_KAFKA_FAILURE:false}
     max-retry: ${OUTBOX_MAX_RETRY:5}

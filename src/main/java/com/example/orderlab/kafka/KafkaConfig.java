@@ -14,6 +14,7 @@ import org.springframework.kafka.core.KafkaOperations;
 @org.springframework.context.annotation.Configuration
 public class KafkaConfig {
     @Bean NewTopic orderCreatedTopic(@Value("${app.kafka.topic}") String topic){return new NewTopic(topic,3,(short)1);}
+    @Bean NewTopic idempotencyLabTopic(@Value("${app.kafka.idempotency-topic:idempotency-lab}") String topic){return new NewTopic(topic,1,(short)1);}
     @Bean DefaultErrorHandler errorHandler(KafkaTemplate<Object,Object> template,@Value("${app.notification.retry-backoff-ms:1000}") long delay){
         return new DefaultErrorHandler(new DeadLetterPublishingRecoverer(template), new FixedBackOff(delay,2));
     }
